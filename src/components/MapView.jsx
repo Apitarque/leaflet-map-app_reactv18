@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import '../styles/map.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+
+// Define el icono personalizado
+const customIcon = new L.Icon({
+    iconUrl: require('../assets/pin-rojo.png'),
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+});
+
+const typeColors = {
+    Robo: '#e53935',
+    Drogas: '#43a047',
+    Disturbios: '#fbc02d'
+};
+
+// Carrusel simple para imágenes
+const ImageCarousel = ({ images }) => {
+    const [index, setIndex] = useState(0);
+    if (!images || images.length === 0) return null;
+
+    const prev = (e) => {
+        e.stopPropagation();
+        setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+    };
+    const next = (e) => {
+        e.stopPropagation();
+        setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+    };
+
+    return (
+        <div style={{ position: 'relative', marginTop: 10 }}>
+            <img
+                src={images[index]}
+                alt={`Incidente ${index + 1}`}
+                style={{ width: '100%', borderRadius: 8, maxHeight: 180, objectFit: 'cover' }}
+            />
+            {images.length > 1 && (
+                <>
+                    <button
+                        onClick={prev}
+                        style={{
+                            position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)',
+                            background: 'rgba(0,0,0,0.4)', color: '#fff', border: 'none', borderRadius: '50%',
+                            width: 28, height: 28, cursor: 'pointer'
+                        }}
+                        aria-label="Anterior"
+                    >&lt;</button>
+                    <button
+                        onClick={next}
+                        style={{
+                            position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)',
+                            background: 'rgba(0,0,0,0.4)', color: '#fff', border: 'none', borderRadius: '50%',
+                            width: 28, height: 28, cursor: 'pointer'
+                        }}
+                        aria-label="Siguiente"
+                    >&gt;</button>
+                </>
+            )}
+            <div style={{
+                position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
+                background: 'rgba(0,0,0,0.4)', color: '#fff', borderRadius: 8, padding: '2px 8px', fontSize: 12
+            }}>
+                {index + 1} / {images.length}
+            </div>
+        </div>
+    );
+};
+
+const MapView = ({ pins }) => {
+    const defaultPosition = [-34.6693634, -58.5663345];
+
+    return (
+        <MapContainer center={defaultPosition} zoom={13} style={{ height: "100vh", width: "100%" }}>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {pins.map((pin, idx) => (
+                <Marker
+                    key={idx}
+                    position={[
+                        parseFloat(pin.coordinates.lat),
+                        parseFloat(pin.coordinates.lng)
+                    ]}
+                    icon={customIcon}
+                >
+                    <Popup>
+                        <div>
+                            <div style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                marginBottom: 8
+                            }}>{pin.name}</div>
+                            <div style={{
+                                display: 'inline-block',
+                                padding: '4px 12px',
+                                borderRadius: 8,
+                                background: typeColors[pin.type] || '#ccc',
+                                color: '#fff',
+                                fontWeight: 'bold',
+                                marginBottom: 8
+                            }}>
+                                {pin.type}
+                            </div>
+                            <div style={{ fontSize: 12, color: '#555', marginTop: 8 }}>
+                                Lat: {pin.coordinates.lat}<br />
+                                Lng: {pin.coordinates.lng}
+                            </div>
+                            {pin.images && pin.images.length > 0 && (
+                                <ImageCarousel images={pin.images} />
+                            )}
+                            {pin.video && (
+                                <div style={{ marginTop: 10 }}>
+                                    <video controls style={{ width: '100%', borderRadius: 8 }}>
+                                        <source src={pin.video} />
+                                        Tu navegador no soporta el video.
+                                    </video>
+                                </div>
+                            )}
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
+        </MapContainer>
+    );
+};
+
+export default MapView;
+
