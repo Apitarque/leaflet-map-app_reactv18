@@ -29,7 +29,7 @@ Una aplicación web hecha en **React** que utiliza **Leaflet.js** y **OpenStreet
 Clona el repositorio y entra a la carpeta del proyecto:
 
 ```sh
-git clone https://github.com/yourusername/leaflet-map-app.git
+git clone https://github.com/Apitarque/leaflet-map-app.git
 cd leaflet-map-app
 ```
 
