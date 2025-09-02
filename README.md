@@ -39,7 +39,16 @@ Instala las dependencias:
 npm install
 ```
 
-### 3. Ejecuta la aplicación
+### 3. Archivo de configuración
+
+Crea un archivo .env en la raíz del proyecto y configura el uso máximo
+del localStorage para almacenar multimedios(5MB):
+
+```sh
+touch "REACT_APP_MAX_MEDIA_MB=5" >> .env
+```
+
+### 4. Ejecuta la aplicación
 
 ```sh
 npm start
