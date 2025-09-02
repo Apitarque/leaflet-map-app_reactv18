@@ -21,7 +21,7 @@ Una aplicación web hecha en **React** que utiliza **Leaflet.js** y **OpenStreet
 
 ### 1. Prerrequisitos
 
-- Node.js v14+  
+- Node.js v14+
 - npm v6+
 
 ### 2. Instalación

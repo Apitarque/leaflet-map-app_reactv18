@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../styles/map.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 
 // Define el icono personalizado
 const customIcon = new L.Icon({
@@ -21,6 +21,12 @@ const typeColors = {
 // Carrusel simple para imágenes
 const ImageCarousel = ({ images }) => {
     const [index, setIndex] = useState(0);
+
+    // Resetear el índice cuando cambian las imágenes
+    React.useEffect(() => {
+        setIndex(0);
+    }, [images]);
+
     if (!images || images.length === 0) return null;
 
     const prev = (e) => {
@@ -71,7 +77,16 @@ const ImageCarousel = ({ images }) => {
     );
 };
 
-const MapView = ({ pins }) => {
+function MapClickHandler({ onMapClick }) {
+    useMapEvents({
+        click(e) {
+            onMapClick(e.latlng);
+        }
+    });
+    return null;
+}
+
+const MapView = ({ pins, onMapClick, tempPin }) => {
     const defaultPosition = [-34.6693634, -58.5663345];
 
     return (
@@ -80,6 +95,7 @@ const MapView = ({ pins }) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            <MapClickHandler onMapClick={onMapClick} />
             {pins.map((pin, idx) => (
                 <Marker
                     key={idx}
@@ -112,7 +128,9 @@ const MapView = ({ pins }) => {
                                 Lng: {pin.coordinates.lng}
                             </div>
                             {pin.images && pin.images.length > 0 && (
-                                <ImageCarousel images={pin.images} />
+                                <>
+                                    <ImageCarousel images={pin.images} />
+                                </>
                             )}
                             {pin.video && (
                                 <div style={{ marginTop: 10 }}>
@@ -126,6 +144,12 @@ const MapView = ({ pins }) => {
                     </Popup>
                 </Marker>
             ))}
+            {tempPin && (
+                <Marker
+                    position={[tempPin.lat, tempPin.lng]}
+                    icon={customIcon}
+                />
+            )}
         </MapContainer>
     );
 };
