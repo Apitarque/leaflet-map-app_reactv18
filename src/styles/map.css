@@ -118,10 +118,35 @@ body {
   background: #fff;
 }
 
+.alert {
+  position: fixed;
+  top: 32px;
+  left: 32px;
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  z-index: 2000;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  animation: fadeInOut 2s;
+}
+
+.alert,.alert-success {
+  background: #43a047;
+}
+
+.alert,.alert-warning {
+  background: #fbc02d;
+}
+
+.alert,.alert-error {
+  background: #e53935;
+}
+
 .alert-success {
   position: fixed;
   top: 32px;
-  right: 50%;
+  left: 32px;
   background: #43a047;
   color: #fff;
   padding: 16px 32px;

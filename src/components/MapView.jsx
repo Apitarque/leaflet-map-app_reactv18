@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import '../styles/map.css';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 
-// Define el icono personalizado
+// Icono personalizado para los pines
 const customIcon = new L.Icon({
     iconUrl: require('../assets/pin-rojo.png'),
     iconSize: [32, 32],
@@ -12,17 +12,18 @@ const customIcon = new L.Icon({
     popupAnchor: [0, -32],
 });
 
+// Colores según el tipo de incidente
 const typeColors = {
     Robo: '#e53935',
     Drogas: '#43a047',
     Disturbios: '#fbc02d'
 };
 
-// Carrusel simple para imágenes
+// Carrusel de imágenes para mostrar en el popup del pin
 const ImageCarousel = ({ images }) => {
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = React.useState(0);
 
-    // Resetear el índice cuando cambian las imágenes
+    // Reinicia el índice cuando cambian las imágenes
     React.useEffect(() => {
         setIndex(0);
     }, [images]);
@@ -31,11 +32,11 @@ const ImageCarousel = ({ images }) => {
 
     const prev = (e) => {
         e.stopPropagation();
-        setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+        setIndex(i => (i === 0 ? images.length - 1 : i - 1));
     };
     const next = (e) => {
         e.stopPropagation();
-        setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+        setIndex(i => (i === images.length - 1 ? 0 : i + 1));
     };
 
     return (
@@ -47,24 +48,16 @@ const ImageCarousel = ({ images }) => {
             />
             {images.length > 1 && (
                 <>
-                    <button
-                        onClick={prev}
-                        style={{
-                            position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)',
-                            background: 'rgba(0,0,0,0.4)', color: '#fff', border: 'none', borderRadius: '50%',
-                            width: 28, height: 28, cursor: 'pointer'
-                        }}
-                        aria-label="Anterior"
-                    >&lt;</button>
-                    <button
-                        onClick={next}
-                        style={{
-                            position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)',
-                            background: 'rgba(0,0,0,0.4)', color: '#fff', border: 'none', borderRadius: '50%',
-                            width: 28, height: 28, cursor: 'pointer'
-                        }}
-                        aria-label="Siguiente"
-                    >&gt;</button>
+                    <button onClick={prev} style={{
+                        position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)',
+                        background: 'rgba(0,0,0,0.4)', color: '#fff', border: 'none', borderRadius: '50%',
+                        width: 28, height: 28, cursor: 'pointer'
+                    }} aria-label="Anterior">&lt;</button>
+                    <button onClick={next} style={{
+                        position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)',
+                        background: 'rgba(0,0,0,0.4)', color: '#fff', border: 'none', borderRadius: '50%',
+                        width: 28, height: 28, cursor: 'pointer'
+                    }} aria-label="Siguiente">&gt;</button>
                 </>
             )}
             <div style={{
@@ -77,6 +70,7 @@ const ImageCarousel = ({ images }) => {
     );
 };
 
+// Componente para manejar el click en el mapa y pasar la posición seleccionada al padre
 function MapClickHandler({ onMapClick }) {
     useMapEvents({
         click(e) {
@@ -86,6 +80,7 @@ function MapClickHandler({ onMapClick }) {
     return null;
 }
 
+// Vista principal del mapa con todos los pines
 const MapView = ({ pins, onMapClick, tempPin }) => {
     const defaultPosition = [-34.6693634, -58.5663345];
 
@@ -128,9 +123,7 @@ const MapView = ({ pins, onMapClick, tempPin }) => {
                                 Lng: {pin.coordinates.lng}
                             </div>
                             {pin.images && pin.images.length > 0 && (
-                                <>
-                                    <ImageCarousel images={pin.images} />
-                                </>
+                                <ImageCarousel images={pin.images} />
                             )}
                             {pin.video && (
                                 <div style={{ marginTop: 10 }}>

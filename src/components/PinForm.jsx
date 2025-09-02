@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
+// Formulario para agregar un nuevo pin/incidente
 const PinForm = ({ lat, lng, onSubmit }) => {
     const [name, setName] = useState('');
     const [type, setType] = useState('Robo');
     const [images, setImages] = useState([]);
     const [video, setVideo] = useState(null);
 
-    // Limpiar el formulario cuando cambia el punto seleccionado
+    // Limpia el formulario cuando cambia el punto seleccionado
     useEffect(() => {
         setName('');
         setType('Robo');
@@ -14,6 +15,7 @@ const PinForm = ({ lat, lng, onSubmit }) => {
         setVideo(null);
     }, [lat, lng]);
 
+    // Convierte las imágenes seleccionadas a base64
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         const readers = files.map(file => {
@@ -28,11 +30,19 @@ const PinForm = ({ lat, lng, onSubmit }) => {
         });
     };
 
+    // Convierte el video seleccionado a base64
     const handleVideoChange = (e) => {
         const file = e.target.files[0];
-        setVideo(file ? URL.createObjectURL(file) : null);
+        if (!file) {
+            setVideo(null);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (ev) => setVideo(ev.target.result);
+        reader.readAsDataURL(file);
     };
 
+    // Envía los datos del formulario al padre
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit({ name, type, images, video });
