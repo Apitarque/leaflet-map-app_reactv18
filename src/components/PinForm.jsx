@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 // Formulario para agregar un nuevo pin/incidente
 const PinForm = ({ lat, lng, onSubmit }) => {
     const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     const [type, setType] = useState('Robo');
     const [images, setImages] = useState([]);
     const [video, setVideo] = useState(null);
@@ -10,6 +11,7 @@ const PinForm = ({ lat, lng, onSubmit }) => {
     // Limpia el formulario cuando cambia el punto seleccionado
     useEffect(() => {
         setName('');
+        setDescription('');
         setType('Robo');
         setImages([]);
         setVideo(null);
@@ -45,24 +47,23 @@ const PinForm = ({ lat, lng, onSubmit }) => {
     // Envía los datos del formulario al padre
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ name, type, images, video });
+        onSubmit({ name, description, type, images, video });
     };
 
     return (
         <div className="pin-form-card">
             <form className="pin-form-card-form" onSubmit={handleSubmit}>
                 <h3>Agregar Incidente</h3>
-                <label>
-                    Latitud:
-                    <input value={lat || ''} disabled />
-                </label>
-                <label>
-                    Longitud:
-                    <input value={lng || ''} disabled />
-                </label>
+                <input value={lat || ''} disabled hidden />
+                <input value={lng || ''} disabled hidden />
                 <label>
                     Nombre:
                     <input value={name} onChange={e => setName(e.target.value)} required />
+                </label>
+                <label>
+                    Descripción:
+                    <textarea value={description} rows={5} onChange={e => setDescription(e.target.value)}
+                    placeholder="Describa su incidente..."></textarea>
                 </label>
                 <label>
                     Tipo:

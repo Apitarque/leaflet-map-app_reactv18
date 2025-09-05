@@ -25,7 +25,7 @@ function App() {
     };
 
     // Maneja el agregado de un nuevo pin
-    const handleAddPin = async ({ name, type, images, video }) => {
+    const handleAddPin = async ({ name, description, type, images, video }) => {
         let totalMB = getBase64SizeMB(images) + getBase64SizeMB(video);
 
         if (totalMB > MAX_MEDIA_MB) {
@@ -39,6 +39,7 @@ function App() {
         if (!tempPin.lat || !tempPin.lng) return;
         const newPin = {
             name,
+            description,
             type,
             coordinates: { lat: tempPin.lat, lng: tempPin.lng },
             images: images || [],
@@ -53,6 +54,7 @@ function App() {
             setAlertMessage(
                 `El tamaño total de todos los incidentes (${totalPinsMB.toFixed(2)} MB) supera el máximo permitido de almacenamiento (${MAX_MEDIA_MB} MB). No se puede subir la incidencia.`
             );
+            setAlertColor(alertTypeColors.Error);
             return;
         }
 
@@ -60,6 +62,7 @@ function App() {
         setTempPin({ lat: '', lng: '' });
         setFormResetKey(prev => prev + 1);
         setAlertMessage('Incidente creado correctamente');
+        setAlertColor(alertTypeColors.Success);
     };
 
     return (

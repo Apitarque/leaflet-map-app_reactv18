@@ -119,8 +119,7 @@ const MapView = ({ pins, onMapClick, tempPin }) => {
                                 {pin.type}
                             </div>
                             <div style={{ fontSize: 12, color: '#555', marginTop: 8 }}>
-                                Lat: {pin.coordinates.lat}<br />
-                                Lng: {pin.coordinates.lng}
+                                {pin.description}
                             </div>
                             {pin.images && pin.images.length > 0 && (
                                 <ImageCarousel images={pin.images} />
