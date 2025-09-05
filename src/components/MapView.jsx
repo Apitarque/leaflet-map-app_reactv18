@@ -4,9 +4,17 @@ import 'leaflet/dist/leaflet.css';
 import '../styles/map.css';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 
-// Icono personalizado para los pines
-const customIcon = new L.Icon({
+// Icono personalizado para los pines guardados
+const customSaveIcon = new L.Icon({
     iconUrl: require('../assets/pin-rojo.png'),
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+});
+
+// Icono personalizado para el pin marcado
+const customSetIcon = new L.Icon({
+    iconUrl: require('../assets/pin-negro.png'),
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
@@ -98,7 +106,7 @@ const MapView = ({ pins, onMapClick, tempPin }) => {
                         parseFloat(pin.coordinates.lat),
                         parseFloat(pin.coordinates.lng)
                     ]}
-                    icon={customIcon}
+                    icon={customSaveIcon}
                 >
                     <Popup>
                         <div>
@@ -139,7 +147,7 @@ const MapView = ({ pins, onMapClick, tempPin }) => {
             {tempPin && (
                 <Marker
                     position={[tempPin.lat, tempPin.lng]}
-                    icon={customIcon}
+                    icon={customSetIcon}
                 />
             )}
         </MapContainer>
